@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  vault:
+    image: vault:1.12.2
+    container_name: vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: 00000000-0000-0000-0000-000000000000
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - 8200:8200
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+    networks:
+      - netms1
+      
+  vault-init:
+    image: vault:1.12.2
+    container_name: vault-init
+    volumes:
+      - ./S02-vault-init.sh:/vault-init.sh
+      - ./config-server/vault/ms-product.json:/ms-product.json
+      - ./config-server/vault/ms-product-dev.json:/ms-product-dev.json
+      #- ./config-server/vault/ms-product-docker.json:/ms-product-docker.json
+      - ./config-server/vault/ms-cart.json:/ms-cart.json
+      - ./config-server/vault/ms-cart-dev.json:/ms-cart-dev.json
+      #- ./config-server/vault/ms-cart-docker.json:/ms-cart-docker.json
+    depends_on:
+      - vault
+    restart: "no"
+    entrypoint: sh -c "/vault-init.sh"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+    networks:
+      - netms1
+
+networks:
+  netms1:
+    name: net-ms1

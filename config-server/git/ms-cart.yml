@@ -2,9 +2,6 @@ server:
   port: ${PORT:0}
 
 spring:
-  
-  application:
-    name: ms-cart
     
   datasource:
     driver-class-name: org.h2.Driver
@@ -18,9 +15,9 @@ spring:
       path: /h2-console
   
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
-      dialect: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
         '[show_sql]': true
@@ -28,25 +25,10 @@ spring:
         '[format_sql]': false
         '[event.merge.entity_copy_observer]': allow
     show-sql: true
-    
-springdoc:
-
-  title: "Cart Api"
-  description: "Api for cart"
-  version: "v1.0.0"
-  contact-name: "Ricardo Alvarado"
-  contact-email: "ricardoalvaradoaponte@gmail.com"
-  contact-url: "ricardoalvaradoaponte@gmail.com"
-  
-  api-docs:
-    path: /api-docs
-#  packages-to-scan:
-#  - com.codearti.application.rest
-#  paths-to-match:
-#  - /v1
-  swagger-ui:
-    path: /swagger-ui.html
-#    operations-sorter: alpha
+  sql:
+    init:
+      mode: always
+      platform: h2
 
 management:
   endpoints:
@@ -60,7 +42,10 @@ management:
 eureka:
   client:
     enabled: true
+
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+        
 configuration:
     texto: Configurando entorno Defecto...
