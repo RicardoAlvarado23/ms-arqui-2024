@@ -4,7 +4,10 @@ server:
 spring:
 
   datasource:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ms-cart
+    username: sa
+    password: ''
   
   h2:
     console:
